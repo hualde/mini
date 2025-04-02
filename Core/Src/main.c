@@ -97,6 +97,22 @@ int main(void)
   // Mensaje inicial
   sprintf(mensaje, "Sistema iniciado\r\n");
   HAL_UART_Transmit(&huart2, (uint8_t*)mensaje, strlen(mensaje), 100);
+  
+  // Espera inicial de 2 segundos con mensajes de estado
+  sprintf(mensaje, "Esperando 2 segundos...\r\n");
+  HAL_UART_Transmit(&huart2, (uint8_t*)mensaje, strlen(mensaje), 100);
+  
+  for(uint8_t i = 0; i < 4; i++) {
+    input_state = HAL_GPIO_ReadPin(GPIO_PORT, INPUT_PIN);
+    sprintf(mensaje, "Estado inicial - PA8: %d -> PA0: %d\r\n", 
+            (input_state == GPIO_PIN_SET) ? 1 : 0,
+            HAL_GPIO_ReadPin(GPIO_PORT, OUTPUT_PIN) == GPIO_PIN_SET ? 1 : 0);
+    HAL_UART_Transmit(&huart2, (uint8_t*)mensaje, strlen(mensaje), 100);
+    HAL_Delay(500); // 500ms * 4 = 2 segundos total
+  }
+  
+  sprintf(mensaje, "Iniciando operacion normal\r\n");
+  HAL_UART_Transmit(&huart2, (uint8_t*)mensaje, strlen(mensaje), 100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
